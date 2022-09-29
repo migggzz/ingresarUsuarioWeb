@@ -208,81 +208,21 @@ function encontrarEleccion(elec,tipoElec){
         case 1:
             arr2.addByName(elec,arrUs);
             imprimirArregloBusqueda(arrUs);
-            // const found4 = arr2.find(elem => elem.nombre === elec);
-            // console.log(found4);
-            // console.log(typeof(found4));
-            // if(found4){
-            //     if(found4.nombre ==  elec){
-            //         imprimirUsuario(found4);
-            //         arr2.addByName(elec,arrUs);
-            //         break;
-            //     }
-            //     else{
-            //         alert("No se Encontro el Usuario");
-            //     }
-            // }
-            // else{
-            //     alert("No se encontro el Usuario");
-            // }
             break;
 
         case 2:
             arr2.addByApellido(elec,arrUs);
             imprimirArregloBusqueda(arrUs);
-            // const found3 = arr2.find(elem => elem.apellido === elec);
-            // console.log(found3);
-            // console.log(typeof(found3));
-            // if(found3){
-            //     if(found3.apellido ==  elec){
-            //         imprimirUsuario(found3);
-            //         arr2.addByName(elec,arrUs);
-            //         break;
-            //     }
-            //     else{
-            //         alert("No se Encontro el Usuario");
-            //     }
-            // }
-            // else{
-            //     alert("No se encontro el Usuario");
-            // }
             break;
 
         case 3:
             arr2.addByEdad(elec,arrUs);
             imprimirArregloBusqueda(arrUs);
-            // const found2 = arr2.find(elem => elem.edad === elec);
-            // console.log(found2);
-            // console.log(typeof(found2));
-            // if(found2){
-            //     if(found2.edad ==  elec){
-            //        imprimirUsuario(found2);
-            //     }
-            //     else{
-            //         alert("No se Encontro el Usuario");
-            //     }
-            // }
-            // else{
-            //     alert("No se encontro el Usuario");
-            // }
             break;
             
         case 4: 
         arr2.addByProfesion(elec,arrUs);
         imprimirArregloBusqueda(arrUs);
-        // const found = arr2.find(elem => elem.profesion === elec);
-        // console.log(found);
-        // console.log(typeof(found));
-        // if(found){
-        //     if(found.profesion ==  elec){
-        //        imprimirUsuario(found);
-        //     }
-        //     else{
-        //         alert("No se Encontro el Usuario");
-        //     }
-        // }
-        // else{
-        //     alert("No se encontro el Usuario");
-        // }
             break;
 
         default:
@@ -292,5 +232,4 @@ function encontrarEleccion(elec,tipoElec){
 }
 agregarBody();
 crearPrueba();
-// arr2.addByName('Miguel',arrUs);
 // crearPersonasPorUsuario(); // se puede remover este llamado a funcion para iniciar directamente de la pagina we
