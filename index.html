@@ -10,6 +10,11 @@
     <!-- <script src="./js/usuarios.js"></script> -->
 </head>
 <body>
+
+    <div id="usuariosLista">
+
+    </div>
+
     <form id="agregarUForm">
         <div class="form-row">
           <div class="form-group col-md-6">
@@ -31,8 +36,14 @@
           </div>
         </div>
         </div>
-        <button type="submit" class="btn btn-primary" id="submitU">Agregar Usuario</button>
+        <button type="submit" onclick="agregarUsuarioForm(arr2)" class="btn btn-primary" id="submitU">Agregar Usuario</button>
       </form>
+
+      <div class="container" id="dataInfoTable">
+
+      </div>
+
+      
 
 
       <script src="./js/usuarios.js"></script>
