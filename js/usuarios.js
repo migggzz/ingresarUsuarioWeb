@@ -6,7 +6,15 @@ class Persona{
         this.profesion = profesion;
     }
 }
-
+function agregarUsuarioForm(){
+    let nombreU = document.querySelector('#nombreU')
+    let apellidoU = document.getElementById('#nombreU')
+    let ocupacion = document.getElementById('ocupacionU')
+    let edad = document.getElementById('edadU')
+    
+    console.log(nombreU)
+    alert(`${nombreU.value}`)
+}
 Array.prototype.addByName = function(elec,arrUs2){
     // Make sure the array is empty
     arrUs2.length = 0;
@@ -57,6 +65,9 @@ Array.prototype.addByProfesion = function(elec, arrUs2){
       }
     }
 }
+
+const bottonSubmit = document.getElementById('submitU');
+bottonSubmit.addEventListener('click',agregarUsuarioForm);
 
 let arr2 = [];
 let arrUs = [];
@@ -163,14 +174,14 @@ function clickMe(){
 
 function imprimirUsuario(found){
     document.body.innerHTML = "";
-                    document.write(`<p> el usuario es : <br> 
-                                    Nombre: ${found.nombre} <br> 
-                                    Apellido: ${found.apellido} <br>
-                                    Edad: ${found.apellido} <br>
-                                    Profesion: ${found.profesion}</p> <br>`);
-                    document.write(`<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`);
-                    document.write(`<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br><br>`);
-                    document.write(`<button onclick="imprimirArregloFinal(arr2)">Haz Click Para Regresar a la Lista</button> <br>`);
+    document.write(`<p> el usuario es : <br> 
+                    Nombre: ${found.nombre} <br> 
+                    Apellido: ${found.apellido} <br>
+                    Edad: ${found.apellido} <br>
+                    Profesion: ${found.profesion}</p> <br>`);
+    document.write(`<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`);
+    document.write(`<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br><br>`);
+    document.write(`<button onclick="imprimirArregloFinal(arr2)">Haz Click Para Regresar a la Lista</button> <br>`);
 }
 
 function buscarUsuario(){
@@ -230,6 +241,8 @@ function encontrarEleccion(elec,tipoElec){
     }
 
 }
+
+
 agregarBody();
 crearPrueba();
 // crearPersonasPorUsuario(); // se puede remover este llamado a funcion para iniciar directamente de la pagina we
