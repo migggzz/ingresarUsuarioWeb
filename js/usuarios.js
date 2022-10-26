@@ -9,6 +9,7 @@ class Persona{
     }
 }
 
+const formUsuarios = document.getElementById('formUsuarios');
 let divLista = document.getElementById('usuariosLista');
 let arr2 = JSON.parse(sessionStorage.getItem('arreglo')) || [];
 let arrUs = [];
@@ -37,7 +38,7 @@ function agregarBodyDivLista(){
     // divLista.innerHTML += `<h1>Bienvenido al programa para crear usuarios</h1> <br>`
     // divLista.innerHTML += `<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`
     // divLista.innerHTML += `<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br> <br>`
-    divLista.innerHTML += `<button onclick="createTable('usuarios',arr2)">Haz Click Para Buscar Ver La Lista</button> <br> <br>`
+    // divLista.innerHTML += `<button onclick="createTable('usuarios',arr2)">Haz Click Para Buscar Ver La Lista</button> <br> <br>`
     divLista.innerHTML += `<button onclick="removeSessionStorage()">Haz Click Para eliminar el arreglo en session storage</button> <br>`
 }
 
@@ -46,6 +47,33 @@ function deleteUsuario(ind){
     sessionStorage.setItem("arreglo",JSON.stringify(arr2))
     createTable('usuarios',arr2)
 
+}
+
+function addFormUsuarios(){
+    formUsuarios.innerHTML ='';
+    formUsuarios.innerHTML +=`<form id="agregarUForm">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="nombreU">Nombre</label>
+        <input type="text" class="form-control" id="nombreU" placeholder="Nombre" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="apellidoU">Apellido</label>
+        <input type="text" class="form-control" id="apellidoU" placeholder="Apellido" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="ocupacionU">Ocupacion</label>
+      <input type="text" class="form-control" id="ocupacionU" placeholder="Ingeniero, Pdicologo, Doctor, etc ...." required>
+    </div>
+      <div class="form-group col-md-2">
+        <label for="edadU">Edad</label>
+        <input type="text" class="form-control" id="edadU" required>
+      </div>
+    </div>
+    </div>
+    <button type="submit" onclick="agregarUsuarioForm(arr2)" class="btn btn-primary" id="submitU">Agregar Usuario</button>
+  </form>`;
 }
 
 const createTable = (clase, arr) => {
@@ -155,6 +183,8 @@ function removeSessionStorage(){
 
 
 agregarBodyDivLista();
+addFormUsuarios();
+createTable("usuarios",arr2);
 // createTable('usuarios',arr2);
 // crearPrueba();
 // crearPersonasPorUsuario(); // se puede remover este llamado a funcion para iniciar directamente de la pagina we
