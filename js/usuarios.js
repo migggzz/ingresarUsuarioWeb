@@ -1,3 +1,5 @@
+typeof window == 'object' ? console.log('se cargo el DOM') : console.log('no se ha podido cargar el DOM')
+
 class Persona{
     constructor(nombre,apellido,edad,profesion){
         this.nombre = nombre;
@@ -7,229 +9,182 @@ class Persona{
     }
 }
 
-Array.prototype.addByName = function(elec,arrUs2){
-    // Make sure the array is empty
-    arrUs2.length = 0;
-    for (let i = 0; i < this.length; i++) {
-        if(this[i].nombre === elec){
-            arrUs2.push(this[i]);
-        }
-        else{
-           ;
-      }
-    }
-    console.log(arrUs2);
-}
-
-Array.prototype.addByApellido = function(elec, arrUs2){
-    arrUs2.length = 0;
-    for (let i = 0; i < this.length; i++) {
-        if(this[i].apellido === elec){
-            arrUs2.push(this[i]);
-        }
-        else{
-           ;
-      }
-    }
-    console.log(arrUs2);
-}
-
-Array.prototype.addByEdad = function(elec, arrUs2){
-    arrUs2.length = 0;
-    for (let i = 0; i < this.length; i++) {
-        if(this[i].edad === elec){
-            arrUs2.push(this[i]);
-        }
-        else{
-           ;
-      }
-    }
-}
-
-Array.prototype.addByProfesion = function(elec, arrUs2){
-    arrUs2.length = 0;
-    for (let i = 0; i < this.length; i++) {
-        if(this[i].profesion === elec){
-            arrUs2.push(this[i]);
-        }
-        else{
-           ;
-      }
-    }
-}
-
-let arr2 = [];
+const formUsuarios = document.getElementById('formUsuarios');
+let divLista = document.getElementById('usuariosLista');
+let arr2 = JSON.parse(sessionStorage.getItem('arreglo')) || [];
 let arrUs = [];
+// const bottonSubmit = document.getElementById('submitU');
+// bottonSubmit.addEventListener('click',agregarUsuarioForm(arr2));
 
-function crearPersonasPorUsuario(){
+function agregarUsuarioForm(arr){
+    let arrTemp = []
+    let nombreU = document.querySelector('#nombreU')
+    let apellidoU = document.getElementById('apellidoU')
+    let ocupacionU = document.getElementById('ocupacionU')
+    let edadU = document.getElementById('edadU')
 
-    let acrear = Number(prompt('cuantas personas quieres crear? (maximo 20 a la vez)'));
-    if(!isNaN(acrear) && acrear>0 && acrear<21){
-        numero = Number(acrear);
-        let arr = [numero]
+    Client = new Persona(nombreU.value, apellidoU.value, ocupacionU.value, edadU.value);
+    
+    console.log(typeof(nombreU.value), nombreU.value)
+    console.log(apellidoU.value)
+    console.log(Client)
+    arrTemp.push(Client)
+    console.log(arr)
+    arr = [...arr, ...arrTemp]
+    sessionStorage.setItem("arreglo",JSON.stringify(arr))
+}
 
-        for(let i = 0; i<numero; i++){
-            arr[i]= new Persona(prompt('introduce nombre'),prompt('introduce apellido'),prompt(`introduce edad`),prompt('introduce profesion'));
-        }
+function agregarBodyDivLista(){
+    // divLista.innerHTML += `<h1>Bienvenido al programa para crear usuarios</h1> <br>`
+    // divLista.innerHTML += `<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`
+    // divLista.innerHTML += `<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br> <br>`
+    // divLista.innerHTML += `<button onclick="createTable('usuarios',arr2)">Haz Click Para Buscar Ver La Lista</button> <br> <br>`
+    divLista.innerHTML += `<button onclick="removeSessionStorage()">Haz Click Para eliminar el arreglo en session storage</button> <br>`
+}
 
-        arr2 = arr2.concat(arr);
-    }
-    else{
-        ;
-    }
+function deleteUsuario(ind){
+    arr2.splice(ind,1)
+    sessionStorage.setItem("arreglo",JSON.stringify(arr2))
+    createTable('usuarios',arr2)
 
-    // se deja por si se quiere seguir agregando usuarios sin hacer click en el boton, se eliminara en siguiente version/version final.
-    let mensaje = Number(prompt('tecelea 1 o si deseas agregar mas personas, teclea cualquier otra cosa para salir'));
-        switch(mensaje){
-            case 1: 
-                crearPersonasPorUsuario();
-            default:
-                break;
-        }
+}
 
- imprimirArregloFinal(arr2);
+function addFormUsuarios(){
+    formUsuarios.innerHTML ='';
+    formUsuarios.innerHTML +=`<form id="agregarUForm">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="nombreU">Nombre</label>
+        <input type="text" class="form-control" id="nombreU" placeholder="Nombre" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="apellidoU">Apellido</label>
+        <input type="text" class="form-control" id="apellidoU" placeholder="Apellido" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="ocupacionU">Ocupacion</label>
+      <input type="text" class="form-control" id="ocupacionU" placeholder="Ingeniero, Pdicologo, Doctor, etc ...." required>
+    </div>
+      <div class="form-group col-md-2">
+        <label for="edadU">Edad</label>
+        <input type="text" class="form-control" id="edadU" required>
+      </div>
+    </div>
+    </div>
+    <button type="submit" onclick="agregarUsuarioForm(arr2)" class="btn btn-primary" id="submitU">Agregar Usuario</button>
+  </form>`;
+}
+
+const createTable = (clase, arr) => {
+    
+    console.log('Holaaaa')
+
+    let insertTableDom = document.getElementById('dataInfoTable');
+    
+    let tableTitleCreateH3 = document.createElement('h3')
+    
+    tableTitleCreateH3.setAttribute('id', clase)
+    
+    console.log(tableTitleCreateH3)
+    
+    //// creamos table
+    
+    let createTable = document.createElement('table');
+    
+    let createTableHead = document.createElement('thead');
+    
+    let createTableBody = document.createElement('tbody');
+    
+    //// pasar atributos
+    
+    createTable.setAttribute('class', 'table ' + clase + ' mb-5')
+    
+    createTableHead.setAttribute('class', clase)
+    
+    createTableBody.setAttribute('class', clase)
+
+    /////////borrar informacion previamente guardada
+    insertTableDom.innerHTML = "";
+    createTable.innerHTML = "";
+    createTableHead.innerHTML = "";
+    createTableBody.innerHTML = "";
+    
+    //// insertamos la tabla
+    
+    insertTableDom.append(createTable);
+    
+    //// tomar la clase padre
+    
+    let nodeParentTable = document.querySelector(`.${clase}`)
+ 
+    nodeParentTable.after(tableTitleCreateH3);
+    console.log('salidaaaaa-->',clase)
+    let infoTextTableTitleCreateH3 = document.getElementById(clase)
 
     
-
-regresarBotton();
-imprimirArregloFinal(arr2);
-
+    infoTextTableTitleCreateH3.innerText = `Informacion de ${clase}`
     
-}
+   // Creamos la etiqueta p
+    let infoTable = document.createElement('p')
+    // Insertamos la informacion dentro de p
+    infoTable.innerHTML = `<b>Lista de ${clase}</b>`
+    // Insertamos la informacion de bajada despues del titulo
+    createTable.before(infoTable);
 
-function regresarBotton(){
-    document.body.innerHTML = "";
-    document.write(`<h1>Bienvenido al programa para crear usuarios</h1> <br>`);
-    document.write(`<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`)
-    document.write(`<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br>`);
-}
+    // Juntamos las variables del encabezado de la tabla y el cuerpo de la tabla en un array
+    let groupTable = [ createTableHead, createTableBody ]
+    groupTable.forEach((element,index)=>{
+        element.setAttribute('class', `${clase}-${index}`);
+        // insertamos los elementos en el DOM con append
+        nodeParentTable.append( element );
+    })
 
-function crearPrueba(){
-    let arreglDePruba = [2]
-    arreglDePruba[0] = new Persona("Miguel","Gomez",33,"ing");
-    arreglDePruba[1] = new Persona("Lucia","Betsabe de Gomez",33,"La Mejor Psicologa de la existencia");
-    arreglDePruba[2] = new Persona("Amphy","Gomez Perez",7,"Cuidadora");
-    arr2 = arreglDePruba;
-    console.log("Arreglo de Prueba");
-    console.log(arreglDePruba);
-}
+    // seleccionamos el encabezado y el cuerpo de la tabla
+    let infoThead = document.querySelector(`.${clase}-0`)
+    let infoTbody = document.querySelector(`.${clase}-1`)
 
-function agregarBody(){
-    document.write(`<h1>Bienvenido al programa para crear usuarios</h1> <br>`);
-    document.write(`<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`);
-    document.write(`<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br> <br>`);
-    document.write(`<button onclick="imprimirArregloFinal(arr2)">Haz Click Para Buscar Ver La Lista</button> <br>`);
-}
+    // Insertamos los nombres de las columnas
+    infoThead.innerHTML = `<tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">edad</th>
+                <th scope="col">Profesion</th>
+    </tr>`
 
-function imprimirArregloFinal(arr3){
-    document.body.innerHTML = "";
-    document.write(`<p> contenido total: ${arr3.length} entradas <br><p>`);
-        for(let j = 0; j<arr3.length;j++){
-            
-            document.write(`<p> la persona ${j+1} es: <br> 
-                                Nombre: ${arr3[j].nombre} <br>
-                                Apellido: ${arr3[j].apellido} <br>
-                                Edad: ${arr3[j].edad} <br>
-                                Profesion: ${arr3[j].profesion} <br> <br> </p>`);
-        }
-        document.write(`<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`);
-        document.write(`<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br>`);
-        console.log("Arreglo introducido por usuario");
-        console.log(arr3);
-}
-
-function imprimirArregloBusqueda(arr3){
-    document.body.innerHTML = "";
-    document.write(`<p> Contenido total de la busqueda es: ${arr3.length} entradas <br><p>`);
-        for(let j = 0; j<arr3.length;j++){
-            
-            document.write(`<p> El Resultado ${j+1} es: <br> 
-                                Nombre: ${arr3[j].nombre} <br>
-                                Apellido: ${arr3[j].apellido} <br>
-                                Edad: ${arr3[j].edad} <br>
-                                Profesion: ${arr3[j].profesion} <br> <br> </p>`);
-        }
-        document.write(`<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`);
-        document.write(`<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br> <br>`);
-        document.write(`<button onclick="imprimirArregloFinal(arr2)">Haz Click Para Buscar Ver La Lista</button> <br>`);
-        console.log("Arreglo introducido por usuario");
-        console.log(arr3);
-}
-
+    // Insertamos los datos del arreglo a la tabla
+    arr.forEach(( element, index ) =>{
+        infoTbody.innerHTML+=`<tr>
+            <th scope="row">${index}</th>
+            <td>${element.nombre}</td>
+            <td>${element.apellido}</td>
+            <td>${element.edad}</td>
+            <td>${element.profesion}</td>
+            <td><button class="btn btn-secondary" onclick="deleteUsuario(${index})">borrar </button></td>
+        </tr>`
+    })
+    
+    }
 
 function clickMe(){
-    crearPersonasPorUsuario();
+    agregarUsuarioForm(arr2);
 }
 
-function imprimirUsuario(found){
-    document.body.innerHTML = "";
-                    document.write(`<p> el usuario es : <br> 
-                                    Nombre: ${found.nombre} <br> 
-                                    Apellido: ${found.apellido} <br>
-                                    Edad: ${found.apellido} <br>
-                                    Profesion: ${found.profesion}</p> <br>`);
-                    document.write(`<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`);
-                    document.write(`<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br><br>`);
-                    document.write(`<button onclick="imprimirArregloFinal(arr2)">Haz Click Para Regresar a la Lista</button> <br>`);
+
+function removeLocalStorage(){
+    localStorage.removeItem('arreglo')
 }
 
-function buscarUsuario(){
-    let eleccion = Number(prompt(`como deseas buscar a el Usuario  1)Nombre  2)Apellido 3)Edad  4)Profesion`));
-    switch(eleccion){
-        case 1:
-            let elec = prompt('nombre del usuario');
-            encontrarEleccion(elec,eleccion);
-            break;
-
-        case 2:
-            let elec2 = prompt('apellido del Usuario');
-            encontrarEleccion(elec2,eleccion);
-            break;
-
-        case 3:
-            let elec3 = Number(prompt('Edad del Usuario'));
-            encontrarEleccion(elec3,eleccion);
-            break;
-
-        case 4: 
-            let eleccionSeleccion4 = prompt('Profesion del Usuario');
-            encontrarEleccion(eleccionSeleccion4,eleccion);
-            break;
-
-        default:
-            // alert('No fue una opcion valida');
-    }
+function removeSessionStorage(){
+    sessionStorage.removeItem('arreglo')
 }
 
-function encontrarEleccion(elec,tipoElec){
-    let tpElec = Number(tipoElec); 
-    let temp = '';
-    switch(tpElec){
-        case 1:
-            arr2.addByName(elec,arrUs);
-            imprimirArregloBusqueda(arrUs);
-            break;
 
-        case 2:
-            arr2.addByApellido(elec,arrUs);
-            imprimirArregloBusqueda(arrUs);
-            break;
 
-        case 3:
-            arr2.addByEdad(elec,arrUs);
-            imprimirArregloBusqueda(arrUs);
-            break;
-            
-        case 4: 
-        arr2.addByProfesion(elec,arrUs);
-        imprimirArregloBusqueda(arrUs);
-            break;
-
-        default:
-            break;
-    }
-
-}
-agregarBody();
-crearPrueba();
+agregarBodyDivLista();
+addFormUsuarios();
+createTable("usuarios",arr2);
+// createTable('usuarios',arr2);
+// crearPrueba();
 // crearPersonasPorUsuario(); // se puede remover este llamado a funcion para iniciar directamente de la pagina we
