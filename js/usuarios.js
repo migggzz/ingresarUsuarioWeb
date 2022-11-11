@@ -10,11 +10,14 @@ class Persona{
 }
 
 const formUsuarios = document.getElementById('formUsuarios');
+const searchBar = document.getElementById('searcher');
 let divLista = document.getElementById('usuariosLista');
 let arr2 = JSON.parse(sessionStorage.getItem('arreglo')) || [];
 let arrUs = [];
-// const bottonSubmit = document.getElementById('submitU');
-// bottonSubmit.addEventListener('click',agregarUsuarioForm(arr2));
+let pokemon = document.getElementById('pokemon');
+let poke ="";
+let resultadoBusqueda = []
+
 
 function agregarUsuarioForm(arr){
     let arrTemp = []
@@ -35,10 +38,6 @@ function agregarUsuarioForm(arr){
 }
 
 function agregarBodyDivLista(){
-    // divLista.innerHTML += `<h1>Bienvenido al programa para crear usuarios</h1> <br>`
-    // divLista.innerHTML += `<button onclick="clickMe()">Haz Click Para Agregar Usuarios</button> <br> <br>`
-    // divLista.innerHTML += `<button onclick="buscarUsuario()">Haz Click Para Buscar Usuarios</button> <br> <br>`
-    // divLista.innerHTML += `<button onclick="createTable('usuarios',arr2)">Haz Click Para Buscar Ver La Lista</button> <br> <br>`
     divLista.innerHTML += `<button onclick="removeSessionStorage()">Haz Click Para eliminar el arreglo en session storage</button> <br>`
 }
 
@@ -47,6 +46,48 @@ function deleteUsuario(ind){
     sessionStorage.setItem("arreglo",JSON.stringify(arr2))
     createTable('usuarios',arr2)
 
+}
+
+function findUsuario(){
+    let searchId = document.getElementById('searchId').value
+    let nameVal  = document.getElementById('inputSelec').value
+    console.log(searchId)
+    console.log(nameVal)
+
+    switch(searchId){
+      case "nombre":
+        resultadoBusqueda = arr2.filter(function(people){
+          return people.nombre== nameVal;
+        })
+        break;
+      case "apellido":
+        resultadoBusqueda = arr2.filter(function(people){
+          return people.apellido== nameVal;
+        })
+        break;
+      case "profesion":
+        resultadoBusqueda = arr2.filter(function(people){
+          return people.profesion== nameVal;
+        })
+        break;
+      case "edad":
+          resultadoBusqueda = arr2.filter(function(people){
+            return people.profesion== nameVal;
+          })
+          break;
+      default: 
+          printInitial()
+          break;
+    }
+    if(resultadoBusqueda.length==0){
+      alert('no se encontraron busquedas')
+      printInitial();
+    }
+    else{
+      console.log(resultadoBusqueda)
+      createTable2(searchId,resultadoBusqueda)
+      pokemon.innerHTML+=`<button onClick="printInitial()">Regresar a Lista de Usuarios</button>`
+    }
 }
 
 function addFormUsuarios(){
@@ -76,9 +117,58 @@ function addFormUsuarios(){
   </form>`;
 }
 
+function returnFetch(poke){
+  return String(poke)
+}
+
+function fetchPokemon(id,name) {
+  let pokeid = document.getElementById(`poke${id}`)
+  fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
+    .then((res) => res.json())
+    .then((data) => {
+      poke = data.sprites.front_default;
+      pokemon.innerHTML += `<img src=${poke} class=" bg-primary text-white"><--${name}</img>`;
+      console.log(pokeid);
+      pokeid.innerHTML += `<img src=${poke}>`;
+    })
+    .catch(function(){console.log("error")})
+    
+}
+
+const fetchPokemon2 = async(index,name)=>{
+  try{
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}/`)
+    if(!response.ok){
+        console.log('no se cargo la info')
+        throw new Error(`HTTP error status: ${response.status}`)
+    }
+    const data = await response.json()
+    poke= data.sprites.front_default;
+    pokemon.innerHTML += `<img src=${poke} class=" bg-primary text-white"><--${name}</img>`;
+
+}catch(error){
+    alert(error)
+}
+}
+
+const fetchPokemon3 = async(index,name)=>{
+  try{
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}/`)
+    if(!response.ok){
+        console.log('no se cargo la info')
+        throw new Error(`HTTP error status: ${response.status}`)
+    }
+    const data = await response.json()
+    poke= data.sprites.front_default;
+    pokemon.innerHTML = `<button onClick="printInitial()">Regresar a Lista de Usuarios</button>`;
+
+}catch(error){
+    alert(error)
+}
+}
+
 const createTable = (clase, arr) => {
     
-    console.log('Holaaaa')
 
     let insertTableDom = document.getElementById('dataInfoTable');
     
@@ -86,7 +176,6 @@ const createTable = (clase, arr) => {
     
     tableTitleCreateH3.setAttribute('id', clase)
     
-    console.log(tableTitleCreateH3)
     
     //// creamos table
     
@@ -119,11 +208,11 @@ const createTable = (clase, arr) => {
     let nodeParentTable = document.querySelector(`.${clase}`)
  
     nodeParentTable.after(tableTitleCreateH3);
-    console.log('salidaaaaa-->',clase)
+    
     let infoTextTableTitleCreateH3 = document.getElementById(clase)
 
     
-    infoTextTableTitleCreateH3.innerText = `Informacion de ${clase}`
+    infoTextTableTitleCreateH3.innerText = `Representacion de Poke por cada Usuario`
     
    // Creamos la etiqueta p
     let infoTable = document.createElement('p')
@@ -149,13 +238,14 @@ const createTable = (clase, arr) => {
                 <th scope="col">#</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Apellido</th>
-                <th scope="col">edad</th>
                 <th scope="col">Profesion</th>
+                <th scope="col">Edad</th>
     </tr>`
 
     // Insertamos los datos del arreglo a la tabla
     arr.forEach(( element, index ) =>{
-        infoTbody.innerHTML+=`<tr>
+      // fetchPokemon(index+1);
+      infoTbody.innerHTML+=`<tr>
             <th scope="row">${index}</th>
             <td>${element.nombre}</td>
             <td>${element.apellido}</td>
@@ -163,9 +253,100 @@ const createTable = (clase, arr) => {
             <td>${element.profesion}</td>
             <td><button class="btn btn-secondary" onclick="deleteUsuario(${index})">borrar </button></td>
         </tr>`
+        fetchPokemon2(index+1,element.nombre)
     })
     
     }
+const createTable2 = (clase, arr) => {
+    
+
+      let insertTableDom = document.getElementById('dataInfoTable');
+      
+      let tableTitleCreateH3 = document.createElement('h3')
+      
+      tableTitleCreateH3.setAttribute('id', clase)
+      
+      
+      //// creamos table
+      
+      let createTable = document.createElement('table');
+      
+      let createTableHead = document.createElement('thead');
+      
+      let createTableBody = document.createElement('tbody');
+      
+      //// pasar atributos
+      
+      createTable.setAttribute('class', 'table ' + clase + ' mb-5')
+      
+      createTableHead.setAttribute('class', clase)
+      
+      createTableBody.setAttribute('class', clase)
+  
+      /////////borrar informacion previamente guardada
+      insertTableDom.innerHTML = "";
+      createTable.innerHTML = "";
+      createTableHead.innerHTML = "";
+      createTableBody.innerHTML = "";
+      
+      //// insertamos la tabla
+      
+      insertTableDom.append(createTable);
+      
+      //// tomar la clase padre
+      
+      let nodeParentTable = document.querySelector(`.${clase}`)
+   
+      nodeParentTable.after(tableTitleCreateH3);
+      
+      let infoTextTableTitleCreateH3 = document.getElementById(clase)
+  
+      
+      infoTextTableTitleCreateH3.innerText = ``
+      
+     // Creamos la etiqueta p
+      let infoTable = document.createElement('p')
+      // Insertamos la informacion dentro de p
+      infoTable.innerHTML = `<b>Lista de Resultados</b>`
+      // Insertamos la informacion de bajada despues del titulo
+      createTable.before(infoTable);
+  
+      // Juntamos las variables del encabezado de la tabla y el cuerpo de la tabla en un array
+      let groupTable = [ createTableHead, createTableBody ]
+      groupTable.forEach((element,index)=>{
+          element.setAttribute('class', `${clase}-${index}`);
+          // insertamos los elementos en el DOM con append
+          nodeParentTable.append( element );
+      })
+  
+      // seleccionamos el encabezado y el cuerpo de la tabla
+      let infoThead = document.querySelector(`.${clase}-0`)
+      let infoTbody = document.querySelector(`.${clase}-1`)
+  
+      // Insertamos los nombres de las columnas
+      infoThead.innerHTML = `<tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Apellido</th>
+                  <th scope="col">Profesion</th>
+                  <th scope="col">Edad</th>
+      </tr>`
+  
+      // Insertamos los datos del arreglo a la tabla
+      arr.forEach(( element, index ) =>{
+        // fetchPokemon(index+1);
+        infoTbody.innerHTML+=`<tr>
+              <th scope="row">${index}</th>
+              <td>${element.nombre}</td>
+              <td>${element.apellido}</td>
+              <td>${element.edad}</td>
+              <td>${element.profesion}</td>
+              <td><button class="btn btn-secondary" onclick="deleteUsuario(${index})">borrar </button></td>
+          </tr>`
+          fetchPokemon3(index+1,element.nombre)
+      })
+      
+      }
 
 function clickMe(){
     agregarUsuarioForm(arr2);
@@ -180,11 +361,27 @@ function removeSessionStorage(){
     sessionStorage.removeItem('arreglo')
 }
 
+function createSearchBar(){
+  searchBar.innerHTML = `<div class="col-auto my-1">
+<label class="mr-sm-2" for="inlineFormCustomSelect">Buscar por...</label>
+<select class="custom-select mr-sm-2" id="searchId">
+  <option value="nombre">nombre</option>
+  <option value="apellido">apellido</option>
+  <option value="profesion">ocupacion</option>
+</select>
+</div>
+<div class="form-group mx-sm-3 mb-2">
+    <input type="text" class="form-control" id="inputSelec" placeholder="Bucar">
+    <button onClick="findUsuario()">Buscar</button>
+  </div>`
+}
+
+function printInitial(){
+  pokemon.innerHTML='';
+  addFormUsuarios();
+  createTable("usuarios",arr2);
+  createSearchBar();
+}
 
 
-agregarBodyDivLista();
-addFormUsuarios();
-createTable("usuarios",arr2);
-// createTable('usuarios',arr2);
-// crearPrueba();
-// crearPersonasPorUsuario(); // se puede remover este llamado a funcion para iniciar directamente de la pagina we
+printInitial()
